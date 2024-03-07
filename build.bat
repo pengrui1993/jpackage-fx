@@ -13,7 +13,7 @@ set PATH=%PATH%;C:\Program Files\Java\jdk-21\bin
 set INPUT_HOME=D:\project\fx-hello\out\artifacts\hello
 set FX_HOME=D:\software\openjfx\javafx-sdk-21.0.2
 set COMPILE_PATH=D:\project\fx-hello\out\production\fx-hello
-set TARGET_NAME=hello.0.0.1.jar
+set TARGET_NAME=hello.jar
 set DIST_PATH=D:\project\fx-hello\out\dist
 set PKG_NAME=demo
 
