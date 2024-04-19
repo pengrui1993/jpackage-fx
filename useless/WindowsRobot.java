@@ -1,17 +1,23 @@
 package windowstest;
 
+import cn.hutool.core.swing.RobotUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.HexUtil;
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.remote.options.BaseOptions;
 import io.appium.java_client.windows.WindowsDriver;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Rectangle;
 import org.openqa.selenium.WebElement;
 
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 
 public class WindowsRobot {
@@ -21,7 +27,7 @@ public class WindowsRobot {
         System.out.printf("%x%n", 123);//7b
         System.out.println(Integer.toHexString(num));
 //        openAppByHandlerId(num);
-        openRoot();
+        openRootUseWindowsScript();
     }
     //& 'C:\Program Files\Google\Chrome\Application\chrome.exe' --start-maximized --remote-debugging-port=9999
     public static void openRoot() throws MalformedURLException {
@@ -62,7 +68,37 @@ public class WindowsRobot {
         options.amend("language", "en");
         options.amend("locale", "US");
         WindowsDriver driver = new WindowsDriver(url, options);
-        driver.executeScript("windows: click", Map.of("x",10,"y",10));
+//        driver.findElements(By.name("10000集约平台")).getFirst().getAttribute("ClassName");
+//        driver.executeScript("windows: click", Map.of("x",10,"y",10,"durationMs",100));
+        WebElement first = driver.findElements(By.name("10000集约平台")).getFirst();
+        WebElement phone = first.findElement(By.name("请输入手机号码"));
+        phone.clear();
+        phone.sendKeys("13628672212");
+        WebElement pwd = first.findElement(By.name("请输入密码"));
+        pwd.clear();
+        pwd.sendKeys("123456");//登 录
+        ThreadUtil.sleep(1000);
+        Rectangle rect = first.getRect();
+        int btnOffsetX = 580,btnOffsetY = 275;
+        int btnEndOffsetX = 845 , btnEndOffsetY = btnOffsetY;
+        driver.executeScript("windows: clickAndDrag"
+                , Map.of("startX", rect.getX()+btnOffsetX
+                        , "startY", rect.getY()+btnOffsetY
+                        , "endX", rect.getX()+btnEndOffsetX
+                        , "endY", rect.getY()+btnEndOffsetY
+                        , "durationMs", 100
+                )
+        );
+        ThreadUtil.sleep(1000);
+        WebElement submit = first.findElement(By.name("登 录"));
+        submit.click();
+        List<WebElement> els = driver.findElements(By.name("手机号验证"));
+        if(!els.isEmpty()){
+            WebElement we = els.getFirst();
+            if(we.isDisplayed()){
+
+            }
+        }
         driver.quit();
     }
     //driver.executeScript("windows: click","x","10","y","10")
