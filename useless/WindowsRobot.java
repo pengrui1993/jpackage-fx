@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.util.Map;
 
 public class WindowsRobot {
     public static void main(String[] args) throws Exception {
@@ -19,7 +20,8 @@ public class WindowsRobot {
         int num = Integer.parseInt(id);
         System.out.printf("%x%n", 123);//7b
         System.out.println(Integer.toHexString(num));
-        openAppByHandlerId(num);
+//        openAppByHandlerId(num);
+        openRoot();
     }
     //& 'C:\Program Files\Google\Chrome\Application\chrome.exe' --start-maximized --remote-debugging-port=9999
     public static void openRoot() throws MalformedURLException {
@@ -39,9 +41,31 @@ public class WindowsRobot {
         System.out.println(handler);
         //driver.findElement(By.className("KPromeMainWindow")).findElements(By.className("KxWpsView"))
 //        driver.findElement(AppiumBy.name("NTKO--文档控件浏览器."));
+        WebElement kxWpsView = driver.findElements(By.className("KxWpsView")).getFirst();
         driver.quit();
+        //driver.executeScript("windows: click", Map.of("x",10,"y",10))
     }
 
+    /**
+     * https://github.com/appium/appium-windows-driver#usage
+     * @throws MalformedURLException
+     */
+    public static void openRootUseWindowsScript() throws MalformedURLException {
+        final URL url = URI.create("http://127.0.0.1:4723/").toURL();
+        final BaseOptions<?> options = new BaseOptions<>()
+                .amend("platformName", "Windows")
+                .amend("app", "Root")
+                .amend("appium:deviceName", "WindowsPC")
+                .amend("appium:newCommandTimeout", 3600)
+                .amend("appium:connectHardwareKeyboard", true);
+        options.amend("automationName", "windows");
+        options.amend("language", "en");
+        options.amend("locale", "US");
+        WindowsDriver driver = new WindowsDriver(url, options);
+        driver.executeScript("windows: click", Map.of("x",10,"y",10));
+        driver.quit();
+    }
+    //driver.executeScript("windows: click","x","10","y","10")
     public static void openAppBy() throws MalformedURLException {
         final URL url = URI.create("http://127.0.0.1:4723/").toURL();
         final BaseOptions<?> options = new BaseOptions<>()
